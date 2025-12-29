@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:store_app/screens/home_page.dart';
 
 void main() {
   runApp(const StoreApp());
@@ -7,15 +8,11 @@ void main() {
 class StoreApp extends StatelessWidget {
   const StoreApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Store App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: Container()
+      initialRoute: HomePage.id,
+      routes: {HomePage.id: (context) => const HomePage()},
     );
   }
-} 
+}

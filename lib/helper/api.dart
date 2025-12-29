@@ -3,8 +3,12 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Api {
-  Future<dynamic> get({required String url}) async {
-    http.Response response = await http.get(Uri.parse(url));
+  Future<dynamic> get({required String url,String? token}) async {
+     Map<String, String> headers = {};
+    if (token != null) {
+      headers.addAll({'Authorization': 'Bearer $token'});
+    }
+    http.Response response = await http.get(Uri.parse(url), headers: headers);
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
@@ -27,8 +31,14 @@ class Api {
       headers: headers,
       body: body,
     );
-    Map<String, dynamic> data = jsonDecode(response.body);
-    return data;
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception(
+        "there was an error ${response.statusCode} with message ${response.body}",
+      );
+    }
   }
 
   Future<dynamic> put({
@@ -37,12 +47,24 @@ class Api {
     String? token,
   }) async {
     Map<String, String> headers = {};
+
+  headers.addAll({'Content-Type': 'application/x-www-form-urlencoded'});
     if (token != null) {
       headers.addAll({'Authorization': 'Bearer $token'});
     }
-    http.Response response = await http.put(Uri.parse(url), body: body,headers: headers);
 
-    Map<String, dynamic> data = jsonDecode(response.body);
-    return data;
+    http.Response response = await http.put(
+      Uri.parse(url),
+      body: body,
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      return data;
+    } else {
+      throw Exception(
+        "there was an error ${response.statusCode} with message ${response.body}",
+      );
+    }
   }
 }
