@@ -148,7 +148,8 @@ flutter build web --release
 
 ## 📸 Screenshots
 
-Add screenshots to the `assets/` folder and reference them here to make the README more visual.
+![WhatsApp Image 2025-12-30 at 2 58 21 AM](https://github.com/user-attachments/assets/71fef16d-9cb7-4318-a584-f449736163f3)
+
 
 ## 👤 Author
 
