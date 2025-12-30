@@ -4,7 +4,12 @@ import 'package:store_app/screens/home_page.dart';
 import 'package:store_app/screens/update_product_page.dart';
 
 void main() {
-  runApp(DevicePreview(builder: (context) => const StoreApp()));
+  runApp(
+    
+    // DevicePreview(builder: (context) => 
+    const StoreApp()
+    // )
+    );
 }
 
 class StoreApp extends StatelessWidget {
