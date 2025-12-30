@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:store_app/models/product_model.dart';
+import 'package:store_app/services/get_all_products_service.dart';
+import 'package:store_app/widgets/custom_card.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
   static String id = 'HomePage';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,59 +16,46 @@ class HomePage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.shopping_cart_outlined),
+            icon: Icon(Icons.shopping_cart),
             color: Colors.black,
           ),
         ],
         elevation: 0,
         title: Text("New Trend", style: TextStyle(color: Colors.black)),
       ),
-      body: Center(
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withAlpha(15),
-                    spreadRadius: 5,
-                    blurRadius: 12,
-                    offset: Offset(5, 5),
-                  ),
-                ],
+      body: Padding(
+        padding: const EdgeInsets.only(top: 65, left: 8, right: 8),
+        child: FutureBuilder<List<ProductModel>>(
+          future: GetAllProductsServices().getAllProducts(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+
+            if (snapshot.hasError) {
+              return Center(child: Text("Error: ${snapshot.error}"));
+            }
+
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return Center(child: Text("No products found"));
+            }
+
+            List<ProductModel> products = snapshot.data!;
+
+            return GridView.builder(
+              itemCount: products.length,
+              clipBehavior: Clip.none,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 65,
+                crossAxisSpacing: 6,
+                childAspectRatio: 1.5,
               ),
-              height: 130,
-              width: 180,
-              child: Card(
-                color: Colors.white,
-                shape: Border(),
-                elevation: 0,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Backback blue',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                      SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(r'$333', style: TextStyle(fontSize: 16)),
-                          Icon(Icons.favorite_border_outlined),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Positioned(top: -50,right: 30,child: Image.network('https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_t.png', height: 100, ),)
-          ],
+              itemBuilder: (context, index) {
+                return CustomCard(product: products[index]);
+              },
+            );
+          },
         ),
       ),
     );

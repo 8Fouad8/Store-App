@@ -3,9 +3,9 @@ import 'package:store_app/models/product_model.dart';
 
 class UpdateProductService {
   Future<ProductModel> updateProduct({
-required String id,
+    required String id,
     required String title,
-    required String price,
+    required dynamic price,
     required String description,
     required String image,
     required String category,
